@@ -8,62 +8,45 @@ export default function DonutCard({ title, value, delta, data }) {
   const deltaStr = delta == null ? null : String(delta);
   const isNeg = deltaStr?.startsWith("-");
 
-  // measure container width to scale chart
   const wrapRef = useRef(null);
   const [wrapW, setWrapW] = useState(0);
 
   useEffect(() => {
     if (!wrapRef.current) return;
-
     const el = wrapRef.current;
     const ro = new ResizeObserver((entries) => {
       const w = entries?.[0]?.contentRect?.width ?? 0;
       setWrapW(Math.round(w));
     });
-
     ro.observe(el);
     setWrapW(Math.round(el.getBoundingClientRect().width));
-
     return () => ro.disconnect();
   }, []);
 
   const chart = useMemo(() => {
-    // fallback if not measured yet
     const W = wrapW || 240;
-
-    // radii scale with width
     const outerRadius = Math.max(65, Math.min(100, Math.round(W * 0.38)));
-const innerRadius = Math.max(45, Math.round(outerRadius * 0.69));
-
-    // font scales too
+    const innerRadius = Math.max(45, Math.round(outerRadius * 0.69));
     const fontSize = Math.max(12, Math.min(18, Math.round(W * 0.07)));
-
-    // hide labels when very small
     const showLabels = W >= 160;
-
-    // hide labels for tiny slices (< 6%)
     const minLabelPct = 6;
 
     const renderLabel = ({ percent, x, y, cx, cy }) => {
       if (!showLabels) return "";
       const p = (percent || 0) * 100;
       if (p < minLabelPct) return "";
-
-      // pull label slightly inward so it doesn't clip
       const dx = x - cx;
       const dy = y - cy;
-      const scale = 0.9; // 90% of default distance
+      const scale = 0.9;
       const nx = cx + dx * scale;
       const ny = cy + dy * scale;
-
       return (
         <text
-          x={nx}
-          y={ny}
+          x={nx} y={ny}
           textAnchor="middle"
           dominantBaseline="central"
           fontSize={fontSize}
-          fill="#374151"
+          fill="#9ca3af"
           style={{ pointerEvents: "none" }}
         >
           {`${Math.round(p)}%`}
@@ -75,30 +58,23 @@ const innerRadius = Math.max(45, Math.round(outerRadius * 0.69));
   }, [wrapW]);
 
   return (
-    <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+    <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-slate-800">
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <div className="text-sm text-gray-500 font-medium">{title}</div>
-
+          <div className="text-md text-gray-500 dark:text-gray-100 font-medium">{title}</div>
           <div className="flex items-baseline gap-3.5 mt-1">
-            <div className="text-3xl font-bold text-gray-900">
+            <div className="text-3xl font-bold text-gray-900 dark:text-white">
               <AnimatedNumber value={value} />
             </div>
-
             {deltaStr && (
-              <div
-                className={`flex items-center gap-0.5 text-sm font-semibold ${
-                  isNeg ? "text-red-500" : "text-green-600"
-                }`}
-              >
+              <div className={`flex items-center gap-0.5 text-sm font-semibold ${isNeg ? "text-red-500" : "text-green-500"}`}>
                 <span>{isNeg ? "↓" : "↑"}</span>
                 {deltaStr.replace("-", "")}
               </div>
             )}
           </div>
-
-          <div className="text-xs text-gray-400 mt-0.5">last day</div>
+          <div className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">last day</div>
         </div>
       </div>
 
@@ -107,14 +83,8 @@ const innerRadius = Math.max(45, Math.round(outerRadius * 0.69));
         {/* Legend */}
         <div className="flex flex-col gap-2.5">
           {data.map((d, idx) => (
-            <div
-              key={d.name}
-              className="flex items-center gap-2.5 text-xs text-gray-500"
-            >
-              <span
-                className="w-2.5 h-2.5 rounded-full inline-block shrink-0"
-                style={{ background: COLORS[idx % COLORS.length] }}
-              />
+            <div key={d.name} className="flex items-center gap-2.5 text-xs text-gray-500 dark:text-slate-400">
+              <span className="w-2.5 h-2.5 rounded-full inline-block shrink-0" style={{ background: COLORS[idx % COLORS.length] }} />
               <span>{d.name}</span>
             </div>
           ))}

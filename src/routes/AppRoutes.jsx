@@ -1,10 +1,15 @@
-import { Routes, Route, Navigate } from "react-router-dom";
-import AdminLayout from "../components/layout/AdminLayout";
-import AnalyticsReporting from "../pages/AnalyticsReporting";
-import BusinessOwner from "../pages/BusinessOwner";
-import Freelancer from "../pages/Freelancer";
-import ManagePost from "../pages/ManagePost";
-import Login from "../pages/Login";
+
+import { Routes, Route, Navigate } from "react-router";
+import AdminLayout          from "../components/layout/AdminLayout";
+import AnalyticsReporting   from "../pages/AnalyticsReporting";
+import BusinessOwner        from "../pages/BusinessOwner";
+import Freelancer           from "../pages/Freelancer";
+import ManagePost           from "../pages/ManagePost";
+import ManageApplications   from "../pages/ManageApplications";
+import CategoryManagement   from "../pages/CategoryManagement";
+import ActivityLog          from "../pages/ActivityLog";
+import ABTestManager        from "../pages/ABTestManager";
+import Login                from "../pages/Login";
 
 export default function AppRoutes() {
   return (
@@ -12,13 +17,17 @@ export default function AppRoutes() {
       {/* Public */}
       <Route path="/login" element={<Login />} />
 
-      {/* Protected/Admin shell */}
+      {/* Admin shell */}
       <Route element={<AdminLayout />}>
-        <Route path="/" element={<Navigate to="/analytics" replace />} />
-        <Route path="/analytics" element={<AnalyticsReporting />} />
+        <Route path="/"              element={<Navigate to="/analytics" replace />} />
+        <Route path="/analytics"     element={<AnalyticsReporting />} />
         <Route path="/business-owner" element={<BusinessOwner />} />
-        <Route path="/freelancer" element={<Freelancer />} />
-        <Route path="/manage-post" element={<ManagePost />} />
+        <Route path="/freelancer"    element={<Freelancer />} />
+        <Route path="/manage-post"   element={<ManagePost />} />
+        <Route path="/applications"  element={<ManageApplications />} />
+        <Route path="/categories"    element={<CategoryManagement />} />
+        <Route path="/activity-log"  element={<ActivityLog />} />
+        {/* <Route path="/ab-tests"      element={<ABTestManager />} /> */}
       </Route>
 
       {/* Fallback */}
