@@ -1,4 +1,3 @@
-
 import { FiMoon, FiSun, FiSearch, FiX, FiUsers, FiBriefcase, FiFileText, FiInbox, FiTag } from "react-icons/fi";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -243,7 +242,7 @@ export default function Topbar() {
 
         {/* Logout */}
         <button
-          onClick={() => { localStorage.clear(); window.location.reload(); }}
+          onClick={() => { localStorage.clear(); window.location.href = "/login"; }}
           className="h-10 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition"
         >
           Log out

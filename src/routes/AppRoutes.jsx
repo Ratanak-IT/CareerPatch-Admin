@@ -1,6 +1,11 @@
-
 import { Routes, Route, Navigate } from "react-router";
 import AdminLayout          from "../components/layout/AdminLayout";
+
+function RequireAuth({ children }) {
+  const token = localStorage.getItem("ACCESS_TOKEN");
+  if (!token) return <Navigate to="/login" replace />;
+  return children;
+}
 import AnalyticsReporting   from "../pages/AnalyticsReporting";
 import BusinessOwner        from "../pages/BusinessOwner";
 import Freelancer           from "../pages/Freelancer";
@@ -17,8 +22,8 @@ export default function AppRoutes() {
       {/* Public */}
       <Route path="/login" element={<Login />} />
 
-      {/* Admin shell */}
-      <Route element={<AdminLayout />}>
+      {/* Admin shell — protected */}
+      <Route element={<RequireAuth><AdminLayout /></RequireAuth>}>
         <Route path="/"              element={<Navigate to="/analytics" replace />} />
         <Route path="/analytics"     element={<AnalyticsReporting />} />
         <Route path="/business-owner" element={<BusinessOwner />} />
