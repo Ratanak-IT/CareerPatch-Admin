@@ -10,7 +10,6 @@ import { http } from "../api/http";
 import { endpoints } from "../api/endpoints";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
-import RowActions from "../components/ui/RowActions";
 import FreelancerUpdateModal from "../components/ui/FreelancerEditModal";
 import PortfolioViewModal from "../components/ui/PortfolioViewModal";
 import UserStatusModal, { UserStatusBadge } from "../components/ui/UserStatusModal";
@@ -22,7 +21,7 @@ const supabase = createClient(
   import.meta.env.VITE_SUPABASE_ANON_KEY
 );
 
-const POLL_MS = 10_000;
+const POLL_MS = 600_000;
 
 /* ─── Custom Select ────────────────────────────────────────────── */
 function CustomSelect({ value, onChange, options, placeholder = "All" }) {
@@ -155,13 +154,6 @@ export default function Freelancer() {
     return allRows.filter(u => Array.isArray(u?.skills) ? u.skills.map(x => String(x).toLowerCase()).includes(picked) : false);
   }, [allRows, skill]);
 
-  const handleDelete = async (user) => {
-    if (!user?.id || !window.confirm("Delete this freelancer?")) return;
-    try { await http.delete(`${endpoints.users}/${user.id}`); await fetchFreelancers(); }
-    catch (e) { console.error(e); alert("Delete failed."); }
-  };
-
-  const handleOpenEdit = (user) => { setSelected(user); setEditOpen(true); };
 
   const handleUpdate = async (payload) => {
     if (!selected?.id) return;
@@ -216,7 +208,6 @@ export default function Freelancer() {
             </svg>
             Portfolio
           </button>
-          <RowActions onEdit={() => handleOpenEdit(row.original)} onDelete={() => handleDelete(row.original)} />
         </div>
       ),
     },

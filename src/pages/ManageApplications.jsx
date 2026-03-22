@@ -519,7 +519,7 @@ export default function ManageApplications() {
               All applications from freelancers to business job posts
             </p>
           </div>
-          <button
+          {/* <button
             onClick={() => {
               fetchApplications();
               fetchJobs();
@@ -541,7 +541,7 @@ export default function ManageApplications() {
               />
             </svg>
             Refresh
-          </button>
+          </button> */}
         </div>
 
         {/* Stats cards — same as BusinessOwner */}

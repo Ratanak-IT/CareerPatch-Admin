@@ -10,6 +10,7 @@ import { createClient } from "@supabase/supabase-js";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { http } from "../api/http";
 import { endpoints } from "../api/endpoints";
+import ExportMenuButton from "../components/ui/ExportMenuButton";
 
 /* ─── Supabase ─────────────────────────────────────────────────── */
 const supabase = createClient(
@@ -18,7 +19,7 @@ const supabase = createClient(
 );
 
 const TABS      = { SERVICES: "services", JOBS: "jobs" };
-const POLL_MS   = 15_000;
+const POLL_MS   = 600_000;
 const PAGE_SIZE = 10;
 
 /* ─── Status config — same pattern as UserStatusBadge ─────────── */
@@ -640,6 +641,18 @@ export default function ManagePost() {
               onChange={e => { setGlobalFilter(e.target.value); setPagination(p => ({ ...p, pageIndex: 0 })); }}
               placeholder="Search by title, category, author…"
               className="h-11 w-full sm:w-[380px] rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800 text-sm text-slate-700 dark:text-slate-200 placeholder:text-slate-400"
+            />
+            <ExportMenuButton
+              rows={filteredData}
+              columns={[
+                { id: "title",    header: "Title",    accessorFn: item => item?.title || item?.jobTitle || item?.serviceName || "—" },
+                { id: "from",     header: "From",     accessorFn: item => item?._fromName || "—" },
+                { id: "category", header: "Category", accessorFn: item => item?._catName  || "—" },
+                { id: "status",   header: "Status",   accessorFn: item => item?.status    || "—" },
+                { id: "posted",   header: "Posted",   accessorFn: item => item?.createdAt ? new Date(item.createdAt).toLocaleDateString() : "—" },
+              ]}
+              filename="manage_posts"
+              title="Manage Posts"
             />
           </div>
         </div>

@@ -1,4 +1,3 @@
-
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   AreaChart, Area, BarChart, Bar,
@@ -17,7 +16,7 @@ const supabase = createClient(
   import.meta.env.VITE_SUPABASE_ANON_KEY
 );
 
-const POLL_MS = 15_000;
+const POLL_MS = 600_000;
 
 /* ─── Helpers ────────────────────────────────────────────────────────────── */
 function toArray(raw) {
@@ -303,9 +302,6 @@ export default function AnalyticsReporting() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-800 dark:text-white">Analytics & Reporting</h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-            Live dashboard · auto-refresh every {POLL_MS / 1000}s
-          </p>
         </div>
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800">

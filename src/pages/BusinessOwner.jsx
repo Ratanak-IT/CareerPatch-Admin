@@ -13,13 +13,14 @@ import UserStatusModal, {
 import { createClient } from "@supabase/supabase-js";
 import { http } from "../api/http";
 import { endpoints } from "../api/endpoints";
+import ExportMenuButton from "../components/ui/ExportMenuButton";
 
 const supabase = createClient(
   import.meta.env.VITE_SUPABASE_URL,
   import.meta.env.VITE_SUPABASE_ANON_KEY,
 );
 
-const POLL_MS = 10_000;
+const POLL_MS = 600_000;
 
 function normType(v) {
   return String(v ?? "")
@@ -410,6 +411,18 @@ export default function BusinessOwner() {
                 placeholder="Search by name, email, phone, location, specialized"
                 className="h-11 w-full sm:w-[520px] rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800 text-sm text-slate-700 dark:text-slate-200 placeholder:text-slate-400"
               />
+              <ExportMenuButton
+              rows={rows}
+              columns={[
+                { id: "fullName", header: "Name",     accessorFn: u => u?.fullName || u?.name || "—" },
+                { id: "email",    header: "Email",    accessorFn: u => u?.email    || "—"             },
+                { id: "phone",    header: "Phone",    accessorFn: u => u?.phone    || "—"             },
+                { id: "address",  header: "Location", accessorFn: u => u?.address  || u?.location || "—" },
+                { id: "skills",   header: "Skills",   accessorFn: u => Array.isArray(u?.skills) ? u.skills.join(", ") : "—" },
+              ]}
+              filename="business_owners"
+              title="Business Owners"
+            />
             </div>
           </div>
 
