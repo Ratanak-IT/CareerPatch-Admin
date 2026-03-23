@@ -4,7 +4,6 @@ import axios from "axios";
 
 const ADMIN_EMAIL = "ratanak1intel@gmail.com";
 const ADMIN_PASS  = "Ratanak@16";
-const BASE_URL    = import.meta.env.VITE_API_URL;
 
 export default function Login() {
   const nav = useNavigate();
@@ -18,11 +17,7 @@ export default function Login() {
     e.preventDefault();
     setErr("");
 
-    const isAdmin =
-      email.trim().toLowerCase() === ADMIN_EMAIL &&
-      password === ADMIN_PASS;
-
-    if (!isAdmin) {
+    if (email.trim().toLowerCase() !== ADMIN_EMAIL || password !== ADMIN_PASS) {
       setErr("Invalid admin credentials.");
       return;
     }
@@ -30,26 +25,22 @@ export default function Login() {
     setLoading(true);
 
     try {
-      // Use plain axios (bypass the http interceptor that might be causing issues)
       const res = await axios.post(
-        `${BASE_URL}/api/users/login`,
-        { email: email.trim(), password },
+        "https://careerpatch-api.anajak-khmer.site/api/users/login",
+        { email: ADMIN_EMAIL, password: ADMIN_PASS },
         { headers: { "Content-Type": "application/json" } }
       );
 
       const { accessToken, refreshToken } = res.data;
 
-      if (!accessToken) throw new Error("No token received");
-
-      localStorage.setItem("ACCESS_TOKEN",  accessToken);
-      localStorage.setItem("IS_ADMIN",      "true");
+      localStorage.setItem("ACCESS_TOKEN", accessToken);
+      localStorage.setItem("IS_ADMIN", "true");
       if (refreshToken) localStorage.setItem("REFRESH_TOKEN", refreshToken);
 
       nav("/analytics");
 
     } catch (e2) {
-      const message = e2?.response?.data?.message;
-      setErr(message || e2.message || "Login failed.");
+      setErr(e2?.response?.data?.message || e2.message || "Login failed.");
     } finally {
       setLoading(false);
     }
