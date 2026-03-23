@@ -1,26 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { http } from "../api/http";
-import { endpoints } from "../api/endpoints";
+import axios from "axios";
 
 const ADMIN_EMAIL = "ratanak1intel@gmail.com";
 const ADMIN_PASS  = "Ratanak@16";
-
-const REGISTER_PAYLOAD = {
-  fullName: "Ratanak Admin",
-  gender: "Male",
-  address: "Cambodia",
-  email: ADMIN_EMAIL,
-  username: "ratanak_admin",
-  profileImageUrl: "https://example.com/img.jpg",
-  phone: "+85512345678",
-  userType: "FREELANCER",
-  skills: [],
-  portfolioUrl: "",
-  experienceYears: 0,
-  bio: "",
-  password: ADMIN_PASS,
-};
+const BASE_URL    = import.meta.env.VITE_API_URL;
 
 export default function Login() {
   const nav = useNavigate();
@@ -46,35 +30,19 @@ export default function Login() {
     setLoading(true);
 
     try {
-      // Step 1: try login directly
-      let res;
-      try {
-        res = await http.post(endpoints.login, {
-          email: email.trim(),
-          password,
-        });
-      } catch (loginErr) {
-        // If 404 / account not found — try registering first then login again
-        const status = loginErr?.response?.status;
-        if (status === 404 || status === 400) {
-          await http.post(endpoints.registerFreelancer || "/api/users/register-freelancer", REGISTER_PAYLOAD);
-          res = await http.post(endpoints.login, {
-            email: email.trim(),
-            password,
-          });
-        } else {
-          throw loginErr;
-        }
-      }
+      // Use plain axios (bypass the http interceptor that might be causing issues)
+      const res = await axios.post(
+        `${BASE_URL}/api/users/login`,
+        { email: email.trim(), password },
+        { headers: { "Content-Type": "application/json" } }
+      );
 
-      // Step 2: save tokens
-      const accessToken  = res.data?.accessToken;
-      const refreshToken = res.data?.refreshToken;
+      const { accessToken, refreshToken } = res.data;
 
       if (!accessToken) throw new Error("No token received");
 
       localStorage.setItem("ACCESS_TOKEN",  accessToken);
-      localStorage.setItem("IS_ADMIN", "true");
+      localStorage.setItem("IS_ADMIN",      "true");
       if (refreshToken) localStorage.setItem("REFRESH_TOKEN", refreshToken);
 
       nav("/analytics");
