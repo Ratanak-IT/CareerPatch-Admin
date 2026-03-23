@@ -33,9 +33,6 @@ http.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    console.log("➡️ REQUEST:", config.method?.toUpperCase(), config.baseURL + config.url);
-    console.log("➡️ HEADERS:", config.headers);
-    console.log("➡️ DATA:", config.data);
     return config;
   },
   (error) => Promise.reject(error)
@@ -54,15 +51,9 @@ const processQueue = (error, token = null) => {
 };
 
 http.interceptors.response.use(
-  (response) => {
-    console.log("✅ RESPONSE:", response.status, response.config.url);
-    console.log("✅ DATA:", response.data);
-    return response;
-  },
+  (response) => response,
 
   async (error) => {
-    console.log("❌ ERROR:", error.response?.status, error.config?.url);
-    console.log("❌ MESSAGE:", error.response?.data);
     const originalRequest = error.config;
 
     if (!error.response) return Promise.reject(error);

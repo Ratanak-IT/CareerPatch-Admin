@@ -1,19 +1,19 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 
 const ADMIN_EMAIL = "ratanak1intel@gmail.com";
 const ADMIN_PASS  = "Ratanak@16";
+
+const HARDCODED_TOKEN = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3b1hlZkJpUEJjb3g5cUlRenhpbDMxMkxyUENVbWJwZ2RJM0xTRkJkNUNJIn0.eyJleHAiOjE3NzQyNjYwMTIsImlhdCI6MTc3NDI2NDIxMiwianRpIjoiMmI4MDBjNGQtNTNmNS00Yjc2LTg2ZjgtMDVhNjIxNmViMGM2IiwiaXNzIjoiaHR0cDovL2tleWNsb2FrOjgwODAvcmVhbG1zL3VzZXItc2VydmljZS1yZWFsbXMiLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiZTdkNGYwYmMtZjQ0Ny00M2YwLWJlYjQtYjA4M2MyNTk0MWQ2IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoidXNlci1zZXJ2aWNlIiwic2Vzc2lvbl9zdGF0ZSI6IjkwZmMyYjBkLTAzYjAtNGVkZS04MWE3LTQzNjRjMDhjNjBmOCIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiLyoiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwiZGVmYXVsdC1yb2xlcy11c2VyLXNlcnZpY2UtcmVhbG1zIiwiRlJFRUxBTkNFUiIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJlbWFpbCBwcm9maWxlIiwic2lkIjoiOTBmYzJiMGQtMDNiMC00ZWRlLTgxYTctNDM2NGMwOGM2MGY4IiwiZW1haWxfdmVyaWZpZWQiOnRydWUsIm5hbWUiOiJyYXRhbmFrIiwicHJlZmVycmVkX3VzZXJuYW1lIjoicmF0YW5hazFpbnRlbEBnbWFpbC5jb20iLCJnaXZlbl9uYW1lIjoicmF0YW5hayIsImVtYWlsIjoicmF0YW5hazFpbnRlbEBnbWFpbC5jb20ifQ.tns4rBtTC96_ach0RLxmPMHGjeJijkRZtPKBpweR6o0Gdr0gM_GN672dZdXnR5bXA7wpIroJaxfAV44pTudQFBrF3_SVOfPVGSG1RTtsJ17X5deWwg3_x1WQVZJ2SYy4pqCcHfU84ZZSTwrSR00krcY3m25WYxpRpUVYgbVVoFhXZeSxZfRjKIFWYFklv3WR_IuT8XrVm23tFbvwLGzNYJbazpKjkfnMlJjsCPL_b8f8p1reB1s3QONuCNwlyQiS7c6M_6y9HDdvKgYFYXZRKCLhUOgCmhsAbzEGeVPLgsTtFRTDJzTzt0Gf-Gn-uk-Tm7EuQBqeFh4AcJ2NVVdtrA";
 
 export default function Login() {
   const nav = useNavigate();
   const [email, setEmail]       = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading]   = useState(false);
   const [err, setErr]           = useState("");
   const [showPass, setShowPass] = useState(false);
 
-  const onSubmit = async (e) => {
+  const onSubmit = (e) => {
     e.preventDefault();
     setErr("");
 
@@ -22,28 +22,10 @@ export default function Login() {
       return;
     }
 
-    setLoading(true);
+    localStorage.setItem("ACCESS_TOKEN", HARDCODED_TOKEN);
+    localStorage.setItem("IS_ADMIN", "true");
 
-    try {
-      const res = await axios.post(
-        "https://careerpatch-api.anajak-khmer.site/api/users/login",
-        { email: ADMIN_EMAIL, password: ADMIN_PASS },
-        { headers: { "Content-Type": "application/json" } }
-      );
-
-      const { accessToken, refreshToken } = res.data;
-
-      localStorage.setItem("ACCESS_TOKEN", accessToken);
-      localStorage.setItem("IS_ADMIN", "true");
-      if (refreshToken) localStorage.setItem("REFRESH_TOKEN", refreshToken);
-
-      nav("/analytics");
-
-    } catch (e2) {
-      setErr(e2?.response?.data?.message || e2.message || "Login failed.");
-    } finally {
-      setLoading(false);
-    }
+    nav("/analytics");
   };
 
   return (
@@ -89,13 +71,12 @@ export default function Login() {
           </button>
         </div>
 
-        {err ? <div className="text-red-600 font-semibold mb-3">{err}</div> : null}
+        {err && <div className="text-red-600 font-semibold mb-3">{err}</div>}
 
         <button
-          disabled={loading}
-          className="w-full h-11 rounded-xl bg-blue-600 text-white font-extrabold hover:bg-blue-700 transition disabled:opacity-60"
+          className="w-full h-11 rounded-xl bg-blue-600 text-white font-extrabold hover:bg-blue-700 transition"
         >
-          {loading ? "Signing in..." : "Login"}
+          Login
         </button>
       </form>
     </div>
