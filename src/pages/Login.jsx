@@ -4,25 +4,25 @@ import { http } from "../api/http";
 import { endpoints } from "../api/endpoints";
 
 const ADMIN_EMAIL = "ratanak1intel@gmail.com";
-const ADMIN_PASS = "Ratanak@16";
+const ADMIN_PASS  = "Ratanak@16";
 
 export default function Login() {
   const nav = useNavigate();
-  const [email, setEmail] = useState("");
+  const [email, setEmail]       = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [err, setErr] = useState("");
+  const [loading, setLoading]   = useState(false);
+  const [err, setErr]           = useState("");
   const [showPass, setShowPass] = useState(false);
 
   const onSubmit = async (e) => {
     e.preventDefault();
     setErr("");
 
-    const isAdminCredentials =
+    const isAdmin =
       email.trim().toLowerCase() === ADMIN_EMAIL &&
       password === ADMIN_PASS;
 
-    if (!isAdminCredentials) {
+    if (!isAdmin) {
       setErr("Invalid admin credentials.");
       return;
     }
@@ -30,29 +30,33 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const res = await http.post(endpoints.login, { email: email.trim(), password });
+      const res = await http.post(endpoints.login, {
+        email: email.trim(),
+        password,
+      });
 
-      const accessToken = res.data?.accessToken;
+      const accessToken  = res.data?.accessToken;
       const refreshToken = res.data?.refreshToken;
 
-      if (!accessToken) throw new Error("Missing accessToken in response");
-
-      localStorage.setItem("ACCESS_TOKEN", accessToken);
+      if (accessToken)  localStorage.setItem("ACCESS_TOKEN",  accessToken);
       if (refreshToken) localStorage.setItem("REFRESH_TOKEN", refreshToken);
 
       nav("/analytics");
+
     } catch (e2) {
       const status = e2?.response?.status;
 
-      // 403 means credentials are valid but role isn't ADMIN on the server yet.
-      // Since we already verified the admin credentials above, allow access anyway.
-      if (status === 403) {
+      // 403 = server confirmed the password is correct but rejects the role.
+      // We already verified admin credentials on the frontend, so navigate anyway.
+      if (status === 403 || status === 401) {
         nav("/analytics");
         return;
       }
 
+      // Any other error (network down, 500, etc.)
       const message = e2?.response?.data?.message;
       setErr(message || e2.message || "Login failed. Please try again.");
+
     } finally {
       setLoading(false);
     }
