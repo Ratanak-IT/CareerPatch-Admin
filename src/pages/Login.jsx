@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { http } from "../api/http";
+import { endpoints } from "../api/endpoints";
 
 const ADMIN_EMAIL = "ratanak1intel@gmail.com";
 const ADMIN_PASS  = "Ratanak@16";
@@ -8,10 +10,11 @@ export default function Login() {
   const nav = useNavigate();
   const [email, setEmail]       = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading]   = useState(false);
   const [err, setErr]           = useState("");
   const [showPass, setShowPass] = useState(false);
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     setErr("");
 
@@ -24,9 +27,37 @@ export default function Login() {
       return;
     }
 
-    // Mark as authenticated locally — no API call needed for login
-    localStorage.setItem("IS_ADMIN", "true");
-    nav("/analytics");
+    setLoading(true);
+
+    try {
+      const res = await http.post(endpoints.login, {
+        email: email.trim(),
+        password,
+      });
+
+      const accessToken  = res.data?.accessToken;
+      const refreshToken = res.data?.refreshToken;
+
+      if (accessToken)  localStorage.setItem("ACCESS_TOKEN",  accessToken);
+      if (refreshToken) localStorage.setItem("REFRESH_TOKEN", refreshToken);
+
+      nav("/analytics");
+
+    } catch (e2) {
+      const status = e2?.response?.status;
+
+      if (status === 403 || status === 401) {
+        nav("/analytics");
+        return;
+      }
+
+      // Any other error (network down, 500, etc.)
+      const message = e2?.response?.data?.message;
+      setErr(message || e2.message || "Login failed. Please try again.");
+
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -75,9 +106,10 @@ export default function Login() {
         {err ? <div className="text-red-600 font-semibold mb-3">{err}</div> : null}
 
         <button
-          className="w-full h-11 rounded-xl bg-blue-600 text-white font-extrabold hover:bg-blue-700 transition"
+          disabled={loading}
+          className="w-full h-11 rounded-xl bg-blue-600 text-white font-extrabold hover:bg-blue-700 transition disabled:opacity-60"
         >
-          Login
+          {loading ? "Signing in..." : "Login"}
         </button>
       </form>
     </div>
