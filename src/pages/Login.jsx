@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const ADMIN_EMAIL = "adminratanak@gmail.com";
+const ADMIN_EMAIL = "ratanak1intel@gmail.com";
 const ADMIN_PASS  = "Ratanak@16";
 
 export default function Login() {
