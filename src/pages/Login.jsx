@@ -6,6 +6,22 @@ import { endpoints } from "../api/endpoints";
 const ADMIN_EMAIL = "ratanak1intel@gmail.com";
 const ADMIN_PASS  = "Ratanak@16";
 
+const REGISTER_PAYLOAD = {
+  fullName: "Ratanak Admin",
+  gender: "Male",
+  address: "Cambodia",
+  email: ADMIN_EMAIL,
+  username: "ratanak_admin",
+  profileImageUrl: "https://example.com/img.jpg",
+  phone: "+85512345678",
+  userType: "FREELANCER",
+  skills: [],
+  portfolioUrl: "",
+  experienceYears: 0,
+  bio: "",
+  password: ADMIN_PASS,
+};
+
 export default function Login() {
   const nav = useNavigate();
   const [email, setEmail]       = useState("");
@@ -30,31 +46,42 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const res = await http.post(endpoints.login, {
-        email: email.trim(),
-        password,
-      });
+      // Step 1: try login directly
+      let res;
+      try {
+        res = await http.post(endpoints.login, {
+          email: email.trim(),
+          password,
+        });
+      } catch (loginErr) {
+        // If 404 / account not found — try registering first then login again
+        const status = loginErr?.response?.status;
+        if (status === 404 || status === 400) {
+          await http.post(endpoints.registerFreelancer || "/api/users/register-freelancer", REGISTER_PAYLOAD);
+          res = await http.post(endpoints.login, {
+            email: email.trim(),
+            password,
+          });
+        } else {
+          throw loginErr;
+        }
+      }
 
+      // Step 2: save tokens
       const accessToken  = res.data?.accessToken;
       const refreshToken = res.data?.refreshToken;
 
-      if (accessToken)  localStorage.setItem("ACCESS_TOKEN",  accessToken);
+      if (!accessToken) throw new Error("No token received");
+
+      localStorage.setItem("ACCESS_TOKEN",  accessToken);
+      localStorage.setItem("IS_ADMIN", "true");
       if (refreshToken) localStorage.setItem("REFRESH_TOKEN", refreshToken);
 
       nav("/analytics");
 
     } catch (e2) {
-      const status = e2?.response?.status;
-
-      if (status === 403 || status === 401) {
-        nav("/analytics");
-        return;
-      }
-
-      // Any other error (network down, 500, etc.)
       const message = e2?.response?.data?.message;
-      setErr(message || e2.message || "Login failed. Please try again.");
-
+      setErr(message || e2.message || "Login failed.");
     } finally {
       setLoading(false);
     }
