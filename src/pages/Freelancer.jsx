@@ -98,7 +98,7 @@ export default function Freelancer() {
     try {
       setLoading(true);
       const res = await http.get(endpoints.users, {
-        params: { userType: "freelancer", page: 0, size: 9999, sortBy: "createdAt" },
+        params: { userType: "freelancer", page: 0, size: 100, sortBy: "createdAt" },
       });
       const top      = res?.data;
       const pageData = top?.data ?? top;

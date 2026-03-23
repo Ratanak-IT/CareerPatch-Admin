@@ -256,7 +256,7 @@ export default function ManageApplications() {
   const fetchJobs = useCallback(async () => {
     try {
       const res = await http.get(endpoints.jobs, {
-        params: { page: 0, size: 9999 },
+        params: { page: 0, size: 100 },
       });
       const raw = res?.data;
       const list = Array.isArray(raw?.content)
@@ -285,7 +285,7 @@ export default function ManageApplications() {
   const fetchUsers = useCallback(async () => {
     try {
       const res = await http.get(endpoints.users, {
-        params: { userType: "business_owner", page: 0, size: 9999 },
+        params: { userType: "business_owner", page: 0, size: 100 },
       });
       const raw = res?.data;
       const pageData = raw?.data ?? raw;

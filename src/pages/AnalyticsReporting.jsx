@@ -151,8 +151,8 @@ export default function AnalyticsReporting() {
     if (first) setLoading(true);
     try {
       const [fRes, oRes, sRes, jRes, cRes] = await Promise.all([
-        http.get(endpoints.users, { params: { userType: "freelancer",      page: 0, size: 9999 } }),
-        http.get(endpoints.users, { params: { userType: "business_owner",  page: 0, size: 9999 } }),
+        http.get(endpoints.users, { params: { userType: "freelancer",      page: 0, size: 100 } }),
+        http.get(endpoints.users, { params: { userType: "business_owner",  page: 0, size: 100 } }),
         http.get(endpoints.services),
         http.get(endpoints.jobs),
         http.get("/api/jobs-service/categories"),

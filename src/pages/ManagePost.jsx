@@ -345,8 +345,8 @@ export default function ManagePost() {
 
       const [postsRes, freelancersRes, ownersRes, supabaseRes, catsRes] = await Promise.allSettled([
         http.get(url, { params: { page: 0, size: 999 } }),
-        http.get(endpoints.users, { params: { userType: "freelancer",     page: 0, size: 9999 } }),
-        http.get(endpoints.users, { params: { userType: "business_owner", page: 0, size: 9999 } }),
+        http.get(endpoints.users, { params: { userType: "freelancer",     page: 0, size: 100 } }),
+        http.get(endpoints.users, { params: { userType: "business_owner", page: 0, size: 100 } }),
         supabase.from("admin_post_status").select("post_id, status, title, snapshot").eq("post_type", postType),
         http.get("/api/jobs-service/categories"),
       ]);
