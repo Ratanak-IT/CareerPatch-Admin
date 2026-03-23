@@ -2,8 +2,9 @@ import { Routes, Route, Navigate } from "react-router";
 import AdminLayout          from "../components/layout/AdminLayout";
 
 function RequireAuth({ children }) {
-  const token = localStorage.getItem("ACCESS_TOKEN");
-  if (!token) return <Navigate to="/login" replace />;
+  const token   = localStorage.getItem("ACCESS_TOKEN");
+  const isAdmin = localStorage.getItem("IS_ADMIN");
+  if (!token && !isAdmin) return <Navigate to="/login" replace />;
   return children;
 }
 import AnalyticsReporting   from "../pages/AnalyticsReporting";
