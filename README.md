@@ -1,16 +1,131 @@
-# React + Vite
+# 🚀 CareerPatch
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+🌐 Live Demo: https://careerpatch.vercel.app/  
+🔐 Admin Panel: https://admincapatch.vercel.app/login  
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 📌 About The Project
 
-## React Compiler
+**CareerPatch** is a web application designed to connect **Freelancers** and **Business Owners** who are looking for skilled professionals or job opportunities.
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+The platform supports different types of work such as:
+- Website Design  
+- Marketing  
+- Video Editing  
+- And many more digital skills  
 
-## Expanding the ESLint configuration
+CareerPatch helps simplify hiring and job searching by providing a centralized system where users can connect, collaborate, and grow.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🛠️ Technologies Used
+
+- **React.js + Vite** → Frontend  
+- **Supabase** → Database  
+- **Firebase** → Authentication (Google & GitHub login)  
+- **Cloudinary** → Image & Portfolio storage  
+- **Tailwind CSS / CSS** → UI Styling  
+- **Vercel** → Deployment  
+
+---
+
+## ✨ Main Features
+
+### 👨‍💼 For Business Owners
+
+- Create and update business profiles  
+- Post job announcements with requirements  
+- Update or delete job posts  
+- View applicants’ profiles and portfolios  
+- Search and filter freelancers by skills  
+- Message freelancers directly  
+
+---
+
+### 👨‍🎨 For Freelancers
+
+- Create and update personal profiles  
+- Upload and manage portfolio (Cloudinary)  
+- Apply for jobs  
+- Post, update, and delete content  
+- Comment and interact  
+- Message business owners  
+- Showcase skills and experience  
+
+---
+
+## 🔐 Authentication
+
+- Email & Password login  
+- Google login (Firebase)  
+- GitHub login (Firebase)  
+
+---
+
+## 🛡️ Admin Dashboard
+
+The **Admin Dashboard** allows administrators to manage and monitor the entire platform efficiently through a centralized system.
+
+### 📊 Analytics & Reporting
+
+- View total **Freelancers**, **Business Owners**, and **Posts**  
+- Monitor **job applications** (Pending, Accepted, Rejected)  
+- Analyze user growth and activity  
+- Export data as **PDF** or **Excel**  
+
+---
+
+### 👥 User Management
+
+- View all freelancers and business owners  
+- Search and filter users by skills  
+- View freelancer portfolios  
+- Ban or suspend user accounts  
+
+---
+
+### 📂 Post Management
+
+- Manage all job and service posts  
+- Remove inappropriate content  
+- Maintain platform quality  
+
+---
+
+### 📄 Job Applications
+
+- View all job applications  
+- Monitor application status  
+
+---
+
+### 🗂️ Categories
+
+- Create and manage categories  
+- Improve filtering and search  
+
+---
+
+## 🔍 How It Works
+
+1. Business owners create profiles and post jobs  
+2. Freelancers search and apply  
+3. Business owners review applicants  
+4. Both communicate via messaging  
+5. Collaboration begins  
+
+---
+
+## ⚙️ Installation
+
+Make sure you have installed:
+
+- Node.js (v16 or higher)
+- npm or yarn
+
+Check version:
+
+```bash
+node -v
+npm -v
